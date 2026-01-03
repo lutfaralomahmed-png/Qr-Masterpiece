@@ -486,43 +486,47 @@
         }
 
         function generateQR() {
-            const data = getData();
-            const dotsStyle = document.getElementById('dots-style').value;
-            const cornersSqStyle = document.getElementById('corners-square-style').value;
-            const cornersDotStyle = document.getElementById('corners-dot-style').value;
-            const colBg = document.getElementById('bg-transparent').checked ? "transparent" : document.getElementById('col-bg').value;
-            const colCornerSq = document.getElementById('col-corner-square').value;
-            const colCornerDot = document.getElementById('col-corner-dot').value;
-            const logoSize = parseFloat(document.getElementById('logo-size').value);
+    const data = getData();
+    const dotsStyle = document.getElementById('dots-style').value;
+    const cornersSqStyle = document.getElementById('corners-square-style').value;
+    
+    // ERROR FIXED: Removed the line looking for 'corners-dot-style'
+    
+    const colBg = document.getElementById('bg-transparent').checked ? "transparent" : document.getElementById('col-bg').value;
+    const colCornerSq = document.getElementById('col-corner-square').value;
+    const colCornerDot = document.getElementById('col-corner-dot').value;
+    const logoSize = parseFloat(document.getElementById('logo-size').value);
 
-            let dotsOptions = { type: dotsStyle };
-            if (colorMode === 'solid') {
-                dotsOptions.color = document.getElementById('col-dots').value;
-            } else {
-                dotsOptions.gradient = {
-                    type: document.getElementById('grad-type').value,
-                    colorStops: [
-                        { offset: 0, color: document.getElementById('grad-start').value },
-                        { offset: 1, color: document.getElementById('grad-end').value }
-                    ]
-                };
-            }
+    let dotsOptions = { type: dotsStyle };
+    if (colorMode === 'solid') {
+        dotsOptions.color = document.getElementById('col-dots').value;
+    } else {
+        dotsOptions.gradient = {
+            type: document.getElementById('grad-type').value,
+            colorStops: [
+                { offset: 0, color: document.getElementById('grad-start').value },
+                { offset: 1, color: document.getElementById('grad-end').value }
+            ]
+        };
+    }
 
-            qrCodeObj.update({
-                data: data,
-                image: logoBase64,
-                dotsOptions: dotsOptions,
-                backgroundOptions: { color: colBg },
-                cornersSquareOptions: { type: cornersSqStyle, color: colCornerSq },
-                cornersDotOptions: { type: cornersDotStyle, color: colCornerDot },
-                imageOptions: { imageSize: logoSize, margin: 5 }
-            });
+    qrCodeObj.update({
+        data: data,
+        image: logoBase64,
+        dotsOptions: dotsOptions,
+        backgroundOptions: { color: colBg },
+        cornersSquareOptions: { type: cornersSqStyle, color: colCornerSq },
+        // UPDATED: Only setting color here, removed the missing 'type'
+        cornersDotOptions: { color: colCornerDot }, 
+        imageOptions: { imageSize: logoSize, margin: 5 }
+    });
 
-            document.getElementById('preview-placeholder').classList.add('hidden');
-            document.getElementById('preview-result').classList.remove('hidden');
-            document.getElementById('preview-result').classList.add('flex');
-            if(window.innerWidth < 1024) document.getElementById('preview-result').scrollIntoView({ behavior: 'smooth' });
-        }
+    document.getElementById('preview-placeholder').classList.add('hidden');
+    document.getElementById('preview-result').classList.remove('hidden');
+    document.getElementById('preview-result').classList.add('flex');
+    if(window.innerWidth < 1024) document.getElementById('preview-result').scrollIntoView({ behavior: 'smooth' });
+}
+
 
         function handleLogo(input) {
             if(input.files && input.files[0]) {
